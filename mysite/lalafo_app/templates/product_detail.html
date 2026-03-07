@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.product_name }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-5px);
+        }
+
+        .back-btn::before {
+            content: '←';
+            font-size: 1.3rem;
+        }
+
+        .product-detail {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .product-image-section {
+            position: relative;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image-section img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .no-image-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .no-image-icon {
+            font-size: 6rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .no-image-text {
+            color: #999;
+            font-size: 1.2rem;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .badge-new {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .badge-used {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .product-info-section {
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-header {
+            margin-bottom: 30px;
+        }
+
+        .product-title {
+            color: #333;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .product-price {
+            color: #667eea;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+        }
+
+        .product-meta {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .meta-label {
+            color: #999;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .meta-value {
+            color: #333;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .product-description {
+            margin-bottom: 30px;
+        }
+
+        .description-title {
+            color: #333;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .description-text {
+            color: #666;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+
+        .product-contact {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .contact-title {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .contact-phone {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .contact-phone::before {
+            content: '📞';
+            font-size: 2rem;
+        }
+
+        .contact-phone:hover {
+            transform: translateX(5px);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.4);
+        }
+
+        .btn-edit::before {
+            content: '✏️';
+            font-size: 1.2rem;
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .btn-delete::before {
+            content: '🗑️';
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .product-main {
+                grid-template-columns: 1fr;
+            }
+
+            .product-image-section {
+                min-height: 400px;
+            }
+
+            .product-info-section {
+                padding: 35px;
+            }
+
+            .product-title {
+                font-size: 2rem;
+            }
+
+            .product-price {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .back-btn {
+                margin-bottom: 20px;
+                padding: 10px 20px;
+                font-size: 0.95rem;
+            }
+
+            .product-info-section {
+                padding: 25px;
+            }
+
+            .product-title {
+                font-size: 1.6rem;
+            }
+
+            .product-price {
+                font-size: 2rem;
+            }
+
+            .product-meta {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .contact-phone {
+                font-size: 1.4rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-title {
+                font-size: 1.4rem;
+            }
+
+            .product-price {
+                font-size: 1.8rem;
+            }
+
+            .product-badge {
+                top: 15px;
+                right: 15px;
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+
+            .contact-phone {
+                font-size: 1.2rem;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{% url 'product_list' %}" class="back-btn">
+            <span>Назад к списку</span>
+        </a>
+
+        <div class="product-detail">
+            <div class="product-main">
+                <div class="product-image-section">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.product_name }}">
+                    {% else %}
+                    <div class="no-image-placeholder">
+                        <div class="no-image-icon">📦</div>
+                        <div class="no-image-text">Нет изображения</div>
+                    </div>
+                    {% endif %}
+
+                    {% if product.product_type %}
+                    <div class="product-badge badge-new">Новый</div>
+                    {% else %}
+                    <div class="product-badge badge-used">Б/у</div>
+                    {% endif %}
+                </div>
+
+                <div class="product-info-section">
+                    <div>
+                        <div class="product-header">
+                            <h1 class="product-title">{{ product.product_name }}</h1>
+                            <div class="product-price">{{ product.price }} сом</div>
+                        </div>
+
+                        <div class="product-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Состояние</span>
+                                <span class="meta-value">
+                                    {% if product.product_type %}Новый{% else %}Б/у{% endif %}
+                                </span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Дата публикации</span>
+                                <span class="meta-value">{{ product.create_date|date:"d.m.Y" }}</span>
+                            </div>
+                        </div>
+
+                        <div class="product-description">
+                            <h2 class="description-title">Описание</h2>
+                            <p class="description-text">{{ product.description }}</p>
+                        </div>
+
+                        <div class="product-contact">
+                            <h3 class="contact-title">Контакты продавца</h3>
+                            <a href="tel:{{ product.phone_number }}" class="contact-phone">
+                                <span>{{ product.phone_number }}</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <a href="{% url 'product_update' product.pk %}" class="btn btn-edit">
+                            <span>Изменить</span>
+                        </a>
+                        <a href="{% url 'product_delete' product.pk %}" class="btn btn-delete">
+                            <span>Удалить</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

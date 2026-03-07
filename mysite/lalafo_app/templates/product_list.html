@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Все товары</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px 100px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #999;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .badge-new {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .badge-used {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .product-content {
+            padding: 25px;
+        }
+
+        .product-title {
+            color: #333;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            min-height: 55px;
+        }
+
+        .product-price {
+            color: #667eea;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 72px;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .product-date {
+            color: #999;
+            font-size: 0.85rem;
+        }
+
+        .product-date::before {
+            content: '📅 ';
+        }
+
+        .contact-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .contact-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: white;
+            padding: 60px 20px;
+        }
+
+        .empty-state h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .no-image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .no-image-icon {
+            font-size: 4rem;
+            margin-bottom: 10px;
+        }
+
+        .no-image-text {
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        /* Стили для кнопки добавления */
+        .add-product-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border: none;
+            padding: 0;
+            border-radius: 50px;
+            box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            animation: pulse 2s infinite;
+        }
+
+        .add-product-btn:hover {
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 12px 35px rgba(245, 87, 108, 0.6);
+            animation: none;
+        }
+
+        .add-product-btn:active {
+            transform: scale(1.05) translateY(-3px);
+        }
+
+        .add-product-btn a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            text-decoration: none;
+            padding: 18px 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .add-product-btn a::before {
+            content: '➕';
+            font-size: 1.3rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 8px 25px rgba(245, 87, 108, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 35px rgba(245, 87, 108, 0.7);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 30px;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .product-image {
+                height: 200px;
+            }
+
+            .add-product-btn {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .add-product-btn a {
+                padding: 15px 25px;
+                font-size: 1rem;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .add-product-btn a span {
+                display: none;
+            }
+
+            .add-product-btn {
+                border-radius: 50%;
+            }
+
+            .add-product-btn a {
+                padding: 20px;
+                justify-content: center;
+            }
+
+            .add-product-btn a::before {
+                font-size: 1.5rem;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Все товары</h1>
+
+        {% if products %}
+        <div class="products-grid">
+            {% for i in products %}
+            <div class="product-card">
+                <div class="product-image">
+                    {% if i.image %}
+                    <img src="{{ i.image.url }}" alt="{{ i.product_name }}">
+                    {% else %}
+                    <div class="no-image-placeholder">
+                        <div class="no-image-icon">📦</div>
+                        <div class="no-image-text">Нет изображения</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                {% if i.product_type %}
+                <div class="product-badge badge-new">Новый</div>
+                {% else %}
+                <div class="product-badge badge-used">Б/у</div>
+                {% endif %}
+
+                <div class="product-content">
+                    <div class="product-title"><a href="{% url 'product_detail' i.pk %}">{{ i.product_name }}</a></div>
+                    <div class="product-price">{{ i.price }} сом</div>
+
+                    <div class="product-footer">
+                        <div class="product-date">{{ i.create_date|date:"d.m.Y" }}</div>
+                        <button class="contact-btn" onclick="window.location.href='tel:{{ i.phone_number }}'">
+                            Связаться
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h2>Товары не найдены</h2>
+            <p>Пока что товары отсутствуют. Добавьте новые товары через админ панель.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <button class="add-product-btn">
+        <a href="{% url 'product_create' %}">
+            <span>Добавить объявление</span>
+        </a>
+    </button>
+</body>
+</html>

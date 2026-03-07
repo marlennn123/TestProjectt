@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Все категории</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: block;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .card-title {
+            color: #333;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .card-arrow {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            color: #667eea;
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover .card-arrow {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: white;
+            padding: 60px 20px;
+        }
+
+        .empty-state h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 30px;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Все категории</h1>
+
+        {% if categories %}
+        <div class="cards-grid">
+            {% for i in categories %}
+            <div class="card" onclick="window.location.href='#'">
+                <div class="card-icon">📦</div>
+                <div class="card-title">{{ i.category_name }}</div>
+                <div class="card-description">Откройте для себя лучшие товары в категории {{ i.category_name }}</div>
+                <div class="card-arrow">→</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h2>Категории не найдены</h2>
+            <p>Пока что категории отсутствуют. Добавьте новые категории через админ панель.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Массив иконок для разных категорий (можно расширить)
+        const categoryIcons = {
+            'электроника': '📱',
+            'одежда': '👕',
+            'книги': '📚',
+            'спорт': '⚽',
+            'дом': '🏡',
+            'сад': '🌱',
+            'игрушки': '🎮',
+            'красота': '💄',
+            'автомобили': '🚗',
+            'авто': '🚗',
+            'продукты': '🍎',
+            'еда': '🍕',
+            'музыка': '🎵',
+            'мебель': '🪑',
+            'компьютеры': '💻',
+            'телефоны': '📱',
+            'обувь': '👟',
+            'аксессуары': '👜',
+            'украшения': '💍',
+            'здоровье': '🏥',
+            'животные': '🐾',
+            'строительство': '🔨',
+            'инструменты': '🔧'
+        };
+
+        // Функция для подбора иконки по названию категории
+        function getIcon(categoryName) {
+            const name = categoryName.toLowerCase();
+            for (let key in categoryIcons) {
+                if (name.includes(key)) {
+                    return categoryIcons[key];
+                }
+            }
+            return '📦'; // иконка по умолчанию
+        }
+
+        // Устанавливаем иконки для всех карточек
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const title = card.querySelector('.card-title').textContent;
+                const icon = card.querySelector('.card-icon');
+                icon.textContent = getIcon(title);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Удаление товара</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .delete-container {
+            background: white;
+            border-radius: 25px;
+            padding: 60px 50px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .warning-icon {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .warning-text {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 18px 45px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            min-width: 180px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(245, 87, 108, 0.5);
+        }
+
+        .btn-delete:active {
+            transform: translateY(-2px);
+        }
+
+        .btn-delete::before {
+            content: '🗑️';
+            font-size: 1.4rem;
+        }
+
+        .btn-cancel {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-cancel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .btn-cancel:active {
+            transform: translateY(-2px);
+        }
+
+        .btn-cancel::before {
+            content: '←';
+            font-size: 1.4rem;
+        }
+
+        form {
+            display: inline;
+        }
+
+        .product-preview {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 35px;
+            border: 2px dashed #ddd;
+        }
+
+        .preview-label {
+            color: #999;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .preview-name {
+            color: #333;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .delete-container {
+                padding: 40px 30px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+
+            .warning-icon {
+                font-size: 4rem;
+            }
+
+            .button-group {
+                flex-direction: column-reverse;
+                gap: 15px;
+            }
+
+            .btn {
+                width: 100%;
+                min-width: unset;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .delete-container {
+                padding: 35px 25px;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            .warning-text {
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 16px 35px;
+                font-size: 1rem;
+            }
+
+            .warning-icon {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="delete-container">
+        <div class="warning-icon">⚠️</div>
+
+        <h1>Вы точно хотите удалить этот товар?</h1>
+
+        <p class="warning-text">
+            Это действие нельзя будет отменить. Товар будет удален навсегда.
+        </p>
+
+        <div class="button-group">
+            <a href="{% url 'product_list' %}" class="btn btn-cancel">
+                <span>Нет, отменить</span>
+            </a>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-delete">
+                    <span>Да, удалить</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
