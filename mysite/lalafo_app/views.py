@@ -7,6 +7,8 @@ from .forms import ProductForm
 
 
 class MarchListView(ListView):
+    queryset = Category.objects.all()
+    context_object_name = 'C'
     template_name = 'march8.html'
 
 
